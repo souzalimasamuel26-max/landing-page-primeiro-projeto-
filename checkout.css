@@ -1,0 +1,402 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f5f5f5;
+    margin: 0;
+    font-family: "Product Sans", Arial, sans-serif;
+}
+
+:focus-visible {
+    outline: 3px solid #111;
+    outline-offset: 2px;
+}
+
+.voltar {
+    display: inline-block;
+    margin: 20px 0 0 20px;
+    color: #555;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.voltar:hover {
+    text-decoration: underline;
+}
+
+header {
+    text-align: center;
+    padding: 20px 20px 10px;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+header p {
+    margin: 0;
+    color: #555;
+    font-size: 16px;
+}
+
+main {
+    background: white;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+main > p {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #555;
+}
+
+.produto {
+    background: #f5f5f5;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.produto-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+#imagem-produto {
+    width: 180px;
+    height: 250px;
+    object-fit: contain;
+}
+
+.dados {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+}
+
+.dados h2 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.dados label {
+    font-size: 14px;
+    color: #333;
+    margin-top: 6px;
+}
+
+.dados input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.dados input:hover {
+    border-color: #999;
+}
+
+.dados input:focus {
+    transform: scale(1.01);
+    border-color: #555;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+.dados input.invalido,
+.pagamento input.invalido {
+    border-color: #d92d20;
+}
+
+.erro {
+    display: block;
+    min-height: 18px;
+    color: #d92d20;
+    font-size: 13px;
+}
+
+#distancia-entrega {
+    margin-top: 6px;
+    color: #555;
+    font-size: 14px;
+}
+
+.pagamento {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    transition: 0.2s ease;
+}
+
+.pagamento:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.pagamento h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.pagamento label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.pagamento input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+#area-pix,
+#area-cartao {
+    margin-top: 18px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+#area-cartao label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+#area-cartao input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+#area-cartao input:focus {
+    outline: none;
+    border-color: #555;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+.quantidade {
+    margin-top: 10px;
+}
+
+.quantidade button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #111;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.quantidade button:hover {
+    transform: scale(1.08);
+    background: #333;
+}
+
+.quantidade span {
+    margin: 0 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.resumo {
+    margin-top: 25px;
+    padding: 25px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    transition: 0.2s ease;
+}
+
+.resumo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.resumo p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.resumo h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #ccc;
+    font-size: 25px;
+}
+
+#finalizar-compra {
+    width: 100%;
+    padding: 16px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    background: #111;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+#finalizar-compra:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+#finalizar-compra:active {
+    transform: translateY(0);
+}
+
+#finalizar-compra:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#mensagem-sucesso {
+    display: none;
+    animation: aparecer 0.4s ease;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    animation: escurecer 0.4s ease;
+}
+
+#mensagem-sucesso a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #000;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+#mensagem-sucesso a:hover {
+    transform: scale(1.05);
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes escurecer {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #mensagem-sucesso,
+    #overlay {
+        animation: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .produto-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .produto {
+        padding: 20px 15px;
+    }
+
+    #imagem-produto {
+        width: 140px;
+        height: 200px;
+    }
+
+    main {
+        width: calc(100% - 30px);
+        padding: 20px 15px;
+        margin: 15px auto;
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
+
+    .dados input,
+    .pagamento input,
+    #area-cartao input {
+        font-size: 16px;
+        padding: 14px;
+        min-height: 48px;
+        box-sizing: border-box;
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    .resumo h3 {
+        font-size: 22px;
+    }
+
+    .quantidade button {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
+}

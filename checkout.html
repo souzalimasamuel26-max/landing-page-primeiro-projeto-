@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout | Drinks</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥤</text></svg>" />
+    <link rel="stylesheet" href="./checkout.css" />
+</head>
+<body>
+    <a href="./index.html" class="voltar">← Voltar para a loja</a>
+
+    <header>
+        <h1>Finalizar compra</h1>
+        <p>Confira seu pedido e preencha seus dados.</p>
+    </header>
+
+    <main>
+        <form id="form-checkout" novalidate>
+            <section class="produto">
+                <h2>Seu produto</h2>
+
+                <div class="produto-info">
+                    <img id="imagem-produto" src="./assets/fanta.png" alt="" />
+
+                    <div>
+                        <h3 id="nome-produto">Fanta Laranja</h3>
+                        <p id="descricao">Refrigerante sabor laranja</p>
+                        <span id="preco-produto">R$ 8,00</span>
+                        <div class="quantidade">
+                            <button type="button" id="diminuir" aria-label="Diminuir quantidade">−</button>
+                            <span id="quantidade" aria-live="polite">1</span>
+                            <button type="button" id="aumentar" aria-label="Aumentar quantidade">+</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dados">
+                <h2>Seus dados</h2>
+
+                <label for="nome">Nome completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" autocomplete="name" required />
+                <span class="erro" id="erro-nome"></span>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" autocomplete="email" required />
+                <span class="erro" id="erro-email"></span>
+
+                <label for="endereco">Endereço (em Palmeirópolis, TO)</label>
+                <input type="text" id="endereco" name="endereco" placeholder="Rua, número, bairro" autocomplete="street-address" required />
+                <span class="erro" id="erro-endereco"></span>
+
+                <p id="distancia-entrega" aria-live="polite"></p>
+            </section>
+
+            <section class="pagamento">
+                <h2>Forma de pagamento</h2>
+
+                <label>
+                    <input type="radio" name="pagamento" id="pix" />
+                    PIX
+                </label>
+
+                <label>
+                    <input type="radio" name="pagamento" id="cartao" />
+                    Cartão
+                </label>
+                <span class="erro" id="erro-pagamento"></span>
+
+                <div id="area-pix" hidden>
+                    <p>Pagamento via PIX</p>
+                    <p>O código PIX será exibido após a confirmação do pedido.</p>
+                </div>
+
+                <div id="area-cartao" hidden>
+                    <p>Pagamento via cartão</p>
+
+                    <label for="numero-cartao">Número do cartão</label>
+                    <input type="text" id="numero-cartao" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" />
+                    <span class="erro" id="erro-numero-cartao"></span>
+
+                    <label for="nome-cartao">Nome no cartão</label>
+                    <input type="text" id="nome-cartao" placeholder="Como está impresso no cartão" autocomplete="cc-name" />
+                    <span class="erro" id="erro-nome-cartao"></span>
+
+                    <label for="validade-cartao">Validade</label>
+                    <input type="text" id="validade-cartao" inputmode="numeric" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" />
+                    <span class="erro" id="erro-validade-cartao"></span>
+
+                    <label for="cvv-cartao">CVV</label>
+                    <input type="text" id="cvv-cartao" inputmode="numeric" placeholder="CVV" maxlength="3" autocomplete="cc-csc" />
+                    <span class="erro" id="erro-cvv-cartao"></span>
+                </div>
+            </section>
+
+            <section class="resumo">
+                <p>Produto: <span id="resumo-produto">Fanta Laranja</span></p>
+                <p>Subtotal: <span id="subtotal">R$ 8,00</span></p>
+                <p>Frete: <span id="frete">R$ 0,00</span></p>
+                <h3>Total: <span id="total">R$ 8,00</span></h3>
+
+                <button type="submit" id="finalizar-compra">Finalizar compra</button>
+            </section>
+        </form>
+    </main>
+
+    <div id="overlay"></div>
+
+    <div id="mensagem-sucesso" role="dialog" aria-modal="true" aria-labelledby="titulo-sucesso">
+        <h2 id="titulo-sucesso">🎉 Compra realizada com sucesso!</h2>
+        <p>Obrigado pela sua compra!</p>
+        <a href="./index.html">Voltar para a loja</a>
+    </div>
+
+    <script src="./checkout.js"></script>
+</body>
+</html>

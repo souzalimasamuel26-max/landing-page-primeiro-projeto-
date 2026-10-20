@@ -1,0 +1,516 @@
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Bold Italic.ttf");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Italic.ttf");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+/* Não há um arquivo "Regular" (peso 400, não itálico) neste pacote de fontes,
+   então o texto normal do corpo usa a pilha de fallback abaixo em vez de
+   fingir um peso que não existe. */
+
+:root {
+    --laranja: #ff9500;
+    --laranja-escuro: #e04428;
+    --vermelho: #ff5e00;
+    --marrom: #4d231c;
+    --creme: #fff8f0;
+    --texto-claro: #ffffff;
+    --sombra-card: 0 12px 30px rgba(77, 35, 28, 0.18);
+    --transicao: 0.2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "Product Sans", Arial, sans-serif;
+    background: var(--creme);
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 3px;
+}
+
+#main {
+    width: 100%;
+    background: var(--laranja-escuro);
+}
+
+/* Cabeçalho / navegação */
+.nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 70px;
+    padding: 0 50px;
+    z-index: 999;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent);
+}
+
+.nav-container a.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 50px;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: opacity var(--transicao);
+}
+
+.nav-menu a:hover {
+    opacity: 0.7;
+}
+
+.menu-icon {
+    display: none;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+/* Seção Hero */
+.Hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(150deg, var(--laranja), var(--vermelho));
+}
+
+.Hero h1 {
+    font-size: clamp(4.5rem, 25vw, 15rem);
+    color: white;
+    letter-spacing: 0.02em;
+}
+
+#fanta {
+    position: absolute;
+    width: 35%;
+    z-index: 2;
+    transition: transform var(--transicao);
+}
+
+#fanta.fanta-hover {
+    transform: scale(1.08);
+}
+
+#laranja-cortada {
+    position: absolute;
+    width: 15%;
+    top: 10%;
+    left: 32%;
+    z-index: 2;
+}
+
+#laranja {
+    position: absolute;
+    width: 20%;
+    z-index: 3;
+    top: 55%;
+    right: 30%;
+}
+
+#folha {
+    position: absolute;
+    top: 10%;
+    left: 0%;
+    width: 18%;
+    transform: rotate(60deg);
+}
+
+#folha2 {
+    position: absolute;
+    top: 70%;
+    left: 80%;
+    width: 12%;
+    transform: rotate(-90deg);
+}
+
+#folha-de-coco {
+    position: absolute;
+    width: 20%;
+    top: 10%;
+    right: 0%;
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 1.8rem;
+    text-decoration: none;
+    z-index: 4;
+    animation: flutuar 1.8s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 10px); }
+}
+
+/* Seção "Mais sabor" */
+.two {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--marrom);
+}
+
+.left-side,
+.right-side {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5vh;
+    width: 50%;
+    padding: 0 5%;
+}
+
+.left-side svg {
+    margin-top: 50vh;
+    width: 90%;
+    transform: rotateX(50deg);
+}
+
+.right-side h2 {
+    color: white;
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
+    line-height: 1.1;
+}
+
+.right-side p {
+    color: white;
+    opacity: 0.85;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    width: 80%;
+    max-width: 46ch;
+}
+
+/* Seção de produtos */
+.three {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10vh 5vw;
+    background: linear-gradient(150deg, var(--laranja), var(--vermelho));
+}
+
+.section-title {
+    color: white;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin-bottom: 6vh;
+    text-align: center;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5vh 3vw;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    background: white;
+    width: 340px;
+    max-width: 90vw;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5vh;
+    height: 540px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--sombra-card);
+    transition: transform var(--transicao);
+}
+
+.card:hover {
+    transform: translateY(-6px);
+}
+
+.card h3 {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    font-size: 1.6rem;
+    color: #1a1a1a;
+    background: white;
+    padding: 0 10px;
+}
+
+.card .preco {
+    position: relative;
+    z-index: 2;
+    color: #666;
+    font-size: 1.1rem;
+    background: white;
+    padding: 0 10px;
+}
+
+.btn-comprar {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    margin-bottom: 2vh;
+    margin-top: 1.5vh;
+    padding: 0.8rem 1.6rem;
+    border-radius: 50px;
+    border: none;
+    background-color: var(--laranja);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--transicao), background-color var(--transicao);
+}
+
+.btn-comprar:hover {
+    background-color: #e68200;
+    transform: scale(1.05);
+}
+
+#cocacola,
+#pepsi {
+    /* Altura travada (em vez de largura solta) garante que a imagem nunca
+       invada a área do preço/botão, não importa o formato do PNG. */
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    width: 100%;
+    z-index: 3;
+    object-fit: contain;
+    transform: translate(-50%, 0%);
+    transition: transform var(--transicao);
+}
+
+#cocacola {
+    height: 76%;
+}
+
+#pepsi {
+    height: 71%;
+}
+
+.card:hover #cocacola,
+.card:hover #pepsi {
+    transform: translate(-50%, 0%) scale(1.08);
+}
+
+.lemon {
+    position: absolute;
+    top: -12%;
+    left: 50%;
+    width: 175px;
+    z-index: 2;
+    transform: translate(-50%, 0%);
+}
+
+#fanta,
+#laranja-cortada,
+#laranja,
+#folha,
+#folha2,
+#cocacola,
+#pepsi,
+.lemon {
+    will-change: top, left, transform;
+}
+
+/* Rodapé */
+.site-footer {
+    background: #2c130e;
+    color: white;
+    padding: 6vh 5vw 3vh;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4vh;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 4vh;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-brand .logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.footer-brand p {
+    margin-top: 10px;
+    opacity: 0.75;
+    max-width: 36ch;
+}
+
+.footer-contato h4 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.footer-contato p {
+    opacity: 0.75;
+    margin-bottom: 10px;
+}
+
+.footer-contato a {
+    color: white;
+    background: var(--laranja);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+    transition: transform var(--transicao);
+}
+
+.footer-contato a:hover {
+    transform: scale(1.05);
+}
+
+.footer-copy {
+    text-align: center;
+    opacity: 0.6;
+    font-size: 0.85rem;
+    margin-top: 3vh;
+}
+
+/* Movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-hint {
+        animation: none;
+    }
+    * {
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .two {
+        flex-direction: column;
+        height: auto;
+        padding: 10vh 0;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side svg {
+        margin-top: 5vh;
+        max-width: 300px;
+    }
+
+    .right-side p {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .nav-container {
+        padding: 0 20px;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(20, 10, 8, 0.95);
+        backdrop-filter: blur(6px);
+    }
+
+    .nav-menu.aberto {
+        display: flex;
+    }
+
+    .nav-menu a {
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-icon {
+        display: flex;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+    }
+}

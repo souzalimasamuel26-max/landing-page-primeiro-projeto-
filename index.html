@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drinks | Refrigerantes geladinhos em Palmeirópolis</title>
+    <meta name="description" content="Peça Coca-Cola, Fanta Laranja e Pepsi geladas com entrega rápida em Palmeirópolis, TO. Escolha, finalize e receba em casa." />
+    <meta name="theme-color" content="#e04428" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥤</text></svg>" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="main">
+        <nav class="nav-container" id="nav-container">
+            <a href="#topo" class="logo">Drinks</a>
+
+            <div class="nav-menu" id="nav-menu">
+                <a href="#topo">Home</a>
+                <a href="#produtos">Produtos</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+            </div>
+
+            <button class="menu-icon" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu">
+                <img src="./assets/menu.png" alt="" />
+            </button>
+        </nav>
+
+        <div class="Hero" id="topo">
+            <h1>FANTA</h1>
+            <img id="laranja-cortada" src="./assets/orange2.png" alt="" />
+            <img id="fanta" src="./assets/fanta.png" alt="Lata de Fanta Laranja gelada" />
+            <img id="laranja" src="./assets/orange.png" alt="" />
+            <img id="folha" src="./assets/leaf.png" alt="" />
+            <img id="folha2" src="./assets/leaf2.png" alt="" />
+            <img id="folha-de-coco" src="./assets/coconoutleaf.png" alt="" />
+            <a href="#produtos" class="scroll-hint" aria-label="Ver produtos">↓</a>
+        </div>
+
+        <div class="two" id="sobre">
+            <div class="left-side">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path
+                        fill="#e04428"
+                        d="M41.5,-59.5C49.8,-51.1,49.7,-33.6,50.7,-19.2C51.7,-4.7,53.8,6.7,52.4,18.9C51.1,31.1,46.3,44.1,36.9,52.9C27.6,61.8,13.8,66.5,-2.5,70C-18.8,73.4,-37.7,75.6,-52.5,68.5C-67.3,61.5,-78.2,45.2,-84.5,27.1C-90.9,9,-92.7,-10.8,-80.5,-19.3C-68.3,-27.8,-42.1,-24.8,-26.3,-30.8C-10.6,-36.8,-5.3,-51.7,5.7,-59.5C16.6,-67.3,33.2,-68,41.5,-59.5Z"
+                        transform="translate(100 100)"
+                    />
+                </svg>
+            </div>
+            <div class="right-side">
+                <h2>Mais sabor. Mais refrescância.</h2>
+                <p>
+                    Escolha seu refrigerante favorito e aproveite todo o sabor de cada momento.
+                    Coca-Cola, Fanta Laranja e Pepsi geladas, prontas para chegar até você.
+                </p>
+            </div>
+        </div>
+
+        <div class="three" id="produtos">
+            <h2 class="section-title">Nossos refrigerantes</h2>
+            <div class="cards">
+                <div class="card">
+                    <img class="lemon lemon1" src="./assets/lemon.png" alt="" />
+                    <img id="cocacola" src="./assets/cocacola.png" alt="Lata de Coca-Cola" />
+                    <h3>Coca-Cola</h3>
+                    <span class="preco">R$ 10,00</span>
+                    <a class="btn-comprar" href="checkout.html?produto=coca">Comprar agora</a>
+                </div>
+
+                <div class="card" id="card-fanta">
+                    <h3>Fanta Laranja</h3>
+                    <span class="preco">R$ 8,00</span>
+                    <a class="btn-comprar" href="checkout.html?produto=fanta">Comprar agora</a>
+                </div>
+
+                <div class="card">
+                    <img class="lemon lemon2" src="./assets/lemon.png" alt="" />
+                    <img id="pepsi" src="./assets/pepsi.png" alt="Lata de Pepsi" />
+                    <h3>Pepsi</h3>
+                    <span class="preco">R$ 9,00</span>
+                    <a class="btn-comprar" href="checkout.html?produto=pepsi">Comprar agora</a>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer" id="contato">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="logo">Drinks</span>
+                    <p>Refrigerantes gelados com entrega em Palmeirópolis, TO.</p>
+                </div>
+                <div class="footer-contato">
+                    <h4>Contato</h4>
+                    <p>Seg. a sáb. · 9h às 21h</p>
+                    <a href="https://wa.me/5500000000000" target="_blank" rel="noopener">WhatsApp</a>
+                </div>
+            </div>
+            <p class="footer-copy">© <span id="ano"></span> Drinks. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
