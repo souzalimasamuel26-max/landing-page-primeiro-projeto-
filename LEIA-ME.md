@@ -59,3 +59,17 @@
   a confirmação.
 - Publicar o `server/server.js` em algum lugar acessível (Render, Railway,
   etc.) se o site for hospedado fora da sua máquina.
+
+## Pedidos pelo WhatsApp
+
+- Ao finalizar a compra, o checkout monta o pedido (itens, total, frete,
+  endereço e forma de pagamento) e abre uma conversa no WhatsApp da loja com
+  tudo preenchido.
+- **Antes de publicar:** troque `WHATSAPP_NUMERO` no topo de `carrinho.js`
+  pelo número real (55 + DDD + número, só dígitos, ex.: `5563999999999`).
+  O mesmo número é usado no botão do rodapé.
+- Se o servidor de frete estiver fora do ar, o cliente ainda consegue enviar o
+  pedido: o frete aparece como "a combinar".
+- O formulário **não coleta mais dados de cartão**. Como o pedido vai por
+  WhatsApp, pedir número de cartão no site seria inseguro e enganoso. As
+  opções agora são PIX, cartão na entrega (maquininha) e dinheiro (com troco).

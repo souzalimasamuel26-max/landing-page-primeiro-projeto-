@@ -1,3 +1,25 @@
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Bold Italic.ttf");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Product Sans";
+    src: url("fonts/Product Sans Italic.ttf");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -169,7 +191,8 @@ main > p {
 }
 
 #area-pix,
-#area-cartao {
+#area-cartao-entrega,
+#area-dinheiro {
     margin-top: 18px;
     padding: 15px;
     background: white;
@@ -177,13 +200,13 @@ main > p {
     border: 1px solid #ddd;
 }
 
-#area-cartao label {
+#area-dinheiro label {
     display: block;
     margin: 0 0 4px;
     font-size: 14px;
 }
 
-#area-cartao input {
+#area-dinheiro input {
     display: block;
     width: 100%;
     padding: 12px;
@@ -195,7 +218,7 @@ main > p {
     font-size: 16px;
 }
 
-#area-cartao input:focus {
+#area-dinheiro input:focus {
     outline: none;
     border-color: #555;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
@@ -299,9 +322,11 @@ main > p {
     transform: translate(-50%, -50%);
     z-index: 2;
     background: white;
-    padding: 40px;
+    padding: 32px 28px;
     border-radius: 15px;
-    max-width: 90vw;
+    width: min(460px, 92vw);
+    max-height: 92vh;
+    overflow-y: auto;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
@@ -379,7 +404,7 @@ main > p {
 
     .dados input,
     .pagamento input,
-    #area-cartao input {
+    #area-dinheiro input {
         font-size: 16px;
         padding: 14px;
         min-height: 48px;
@@ -399,4 +424,204 @@ main > p {
         height: 44px;
         font-size: 22px;
     }
+}
+
+/* Carrinho */
+.produto h2 {
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.item-carrinho {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.item-carrinho:last-child {
+    border-bottom: none;
+}
+
+.item-img {
+    width: 90px;
+    height: 120px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.item-meio {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-info h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.item-desc {
+    margin: 0 0 4px;
+    color: #666;
+    font-size: 14px;
+}
+
+.item-preco {
+    color: #555;
+    font-size: 14px;
+}
+
+.item-lado {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.item-subtotal {
+    font-size: 18px;
+}
+
+.item-remover {
+    background: none;
+    border: none;
+    color: #d92d20;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 4px;
+}
+
+#carrinho-vazio {
+    margin: 10px 0 0;
+    color: #555;
+}
+
+#carrinho-vazio a {
+    color: #111;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .item-carrinho {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .item-meio {
+        flex-basis: calc(100% - 110px);
+    }
+
+    .item-lado {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+.aviso-direta {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #fff4e0;
+    border: 1px solid #f0c987;
+    color: #6b4200;
+    font-size: 14px;
+}
+
+.aviso-direta a {
+    color: #111;
+    font-weight: bold;
+}
+
+.pagamento-nota {
+    margin: -6px 0 12px;
+    color: #555;
+    font-size: 14px;
+}
+
+#mensagem-sucesso h2 {
+    margin-top: 0;
+}
+
+.modal-codigo {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 4px 14px;
+    border-radius: 50px;
+    background: #f0f0f0;
+    font-size: 14px;
+}
+
+#mensagem-sucesso .btn-whatsapp {
+    display: block;
+    margin: 18px 0 10px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background: #128c4a;
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+    text-decoration: none;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#mensagem-sucesso .btn-whatsapp:hover {
+    background: #0e7a40;
+    transform: translateY(-2px);
+}
+
+.btn-secundario {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background: white;
+    color: #222;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.btn-secundario:hover {
+    border-color: #888;
+}
+
+.aviso-whatsapp {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #fff4e0;
+    border: 1px solid #f0c987;
+    color: #6b4200;
+    font-size: 13px;
+}
+
+.modal-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.link-simples,
+#mensagem-sucesso .modal-links a.link-simples {
+    background: none;
+    border: none;
+    color: #555;
+    font-family: inherit;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px;
+    margin: 0;
+    display: inline;
+}
+
+.link-simples:hover {
+    color: #111;
 }

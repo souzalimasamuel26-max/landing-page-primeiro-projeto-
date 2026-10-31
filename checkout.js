@@ -3,76 +3,126 @@
 // endereço ou troque a URL abaixo pela do servidor publicado.
 const FRETE_API_BASE = "http://localhost:3000";
 
-// Catálogo de produtos: nome, descrição, imagem e preço em um só lugar,
-// para não precisar repetir/sincronizar valores manualmente com o index.html.
-const PRODUTOS = {
-    coca: {
-        nome: "Coca-Cola",
-        descricao: "Refrigerante sabor cola",
-        imagem: "./assets/cocacola.png",
-        preco: 10,
-    },
-    pepsi: {
-        nome: "Pepsi",
-        descricao: "Refrigerante sabor cola",
-        imagem: "./assets/pepsi.png",
-        preco: 9,
-    },
-    fanta: {
-        nome: "Fanta Laranja",
-        descricao: "Refrigerante sabor laranja",
-        imagem: "./assets/fanta.png",
-        preco: 8,
-    },
-};
+// O catálogo (PRODUTOS) e o carrinho vêm do carrinho.js.
 
-const parametros = new URLSearchParams(window.location.search);
-const chaveProduto = PRODUTOS[parametros.get("produto")] ? parametros.get("produto") : "fanta";
-const produtoAtual = PRODUTOS[chaveProduto];
+// Veio do "Comprar agora"? Então é compra direta: só aquele item, sem mexer no carrinho salvo.
+iniciarCompraDireta();
+if (emCompraDireta()) {
+    document.getElementById("aviso-compra-direta").hidden = false;
+    document.getElementById("titulo-itens").textContent = "Sua compra";
+}
 
-const nomeProduto = document.getElementById("nome-produto");
-const descricao = document.getElementById("descricao");
-const imagemProduto = document.getElementById("imagem-produto");
-const resumoProduto = document.getElementById("resumo-produto");
-
-nomeProduto.textContent = produtoAtual.nome;
-descricao.textContent = produtoAtual.descricao;
-imagemProduto.src = produtoAtual.imagem;
-imagemProduto.alt = produtoAtual.nome;
-resumoProduto.textContent = produtoAtual.nome;
-
-const precoUnitario = produtoAtual.preco;
 let enderecoValido = false;
+let freteIndisponivel = false; // servidor de frete fora do ar: o frete fica "a combinar"
+let distanciaKmAtual = null;
 let freteAtual = 0;
 
-const diminuir = document.getElementById("diminuir");
-const aumentar = document.getElementById("aumentar");
-const quantidade = document.getElementById("quantidade");
+const listaItens = document.getElementById("itens-carrinho");
+const carrinhoVazio = document.getElementById("carrinho-vazio");
 
-function formatarMoeda(valor) {
-    return `R$ ${valor.toFixed(2).replace(".", ",")}`;
+function criarElemento(tag, classe, texto) {
+    const el = document.createElement(tag);
+    if (classe) el.className = classe;
+    if (texto !== undefined) el.textContent = texto;
+    return el;
 }
+
+function criarBotaoQtd(chave, acao, rotulo, simbolo) {
+    const botao = criarElemento("button", "", simbolo);
+    botao.type = "button";
+    botao.dataset.produto = chave;
+    botao.dataset.acao = acao;
+    botao.setAttribute("aria-label", rotulo + " " + PRODUTOS[chave].nome);
+    return botao;
+}
+
+function renderizarCarrinho() {
+    const carrinho = lerCarrinho();
+    const chaves = Object.keys(carrinho);
+
+    listaItens.textContent = "";
+
+    chaves.forEach(function (chave) {
+        const produto = PRODUTOS[chave];
+        const qtd = carrinho[chave];
+
+        const item = criarElemento("div", "item-carrinho");
+
+        const img = criarElemento("img", "item-img");
+        img.src = produto.imagem;
+        img.alt = produto.nome;
+
+        const info = criarElemento("div", "item-info");
+        info.appendChild(criarElemento("h3", "", produto.nome));
+        info.appendChild(criarElemento("p", "item-desc", produto.descricao));
+        info.appendChild(criarElemento("span", "item-preco", formatarMoeda(produto.preco) + " cada"));
+
+        const controles = criarElemento("div", "quantidade");
+        controles.appendChild(criarBotaoQtd(chave, "diminuir", "Diminuir quantidade de", "−"));
+        const qtdEl = criarElemento("span", "", String(qtd));
+        qtdEl.setAttribute("aria-live", "polite");
+        controles.appendChild(qtdEl);
+        controles.appendChild(criarBotaoQtd(chave, "aumentar", "Aumentar quantidade de", "+"));
+
+        const lado = criarElemento("div", "item-lado");
+        lado.appendChild(criarElemento("strong", "item-subtotal", formatarMoeda(produto.preco * qtd)));
+        const remover = criarElemento("button", "item-remover", "Remover");
+        remover.type = "button";
+        remover.dataset.produto = chave;
+        remover.dataset.acao = "remover";
+        remover.setAttribute("aria-label", "Remover " + produto.nome + " do carrinho");
+        lado.appendChild(remover);
+
+        const meio = criarElemento("div", "item-meio");
+        meio.appendChild(info);
+        meio.appendChild(controles);
+
+        item.appendChild(img);
+        item.appendChild(meio);
+        item.appendChild(lado);
+        listaItens.appendChild(item);
+    });
+
+    const vazio = chaves.length === 0;
+    carrinhoVazio.hidden = !vazio;
+    atualizarPreco();
+}
+
+listaItens.addEventListener("click", function (evento) {
+    const botao = evento.target.closest("button[data-acao]");
+    if (!botao) return;
+
+    const chave = botao.dataset.produto;
+    const carrinho = lerCarrinho();
+    const atual = carrinho[chave] || 0;
+
+    if (botao.dataset.acao === "aumentar") {
+        carrinho[chave] = Math.min(atual + 1, QUANTIDADE_MAXIMA);
+    } else if (botao.dataset.acao === "diminuir") {
+        if (atual > 1) carrinho[chave] = atual - 1;
+        else delete carrinho[chave]; // 1 -> 0 remove o item
+    } else if (botao.dataset.acao === "remover") {
+        delete carrinho[chave];
+    }
+
+    salvarCarrinho(carrinho);
+    renderizarCarrinho();
+});
 
 function atualizarPreco() {
-    const quantidadeAtual = Number(quantidade.textContent);
-    const subtotal = precoUnitario * quantidadeAtual;
+    const carrinho = lerCarrinho();
+    const subtotal = subtotalDoCarrinho(carrinho);
+    const temItens = totalDeItens(carrinho) > 0;
 
-    document.getElementById("preco-produto").textContent = formatarMoeda(subtotal);
+    document.getElementById("resumo-itens").textContent = totalDeItens(carrinho);
     document.getElementById("subtotal").textContent = formatarMoeda(subtotal);
-    document.getElementById("total").textContent = formatarMoeda(subtotal + freteAtual);
-}
+    document.getElementById("total").textContent = formatarMoeda(subtotal + (temItens ? freteAtual : 0));
 
-aumentar.addEventListener("click", function () {
-    quantidade.textContent = Number(quantidade.textContent) + 1;
-    atualizarPreco();
-});
-
-diminuir.addEventListener("click", function () {
-    if (Number(quantidade.textContent) > 1) {
-        quantidade.textContent = Number(quantidade.textContent) - 1;
-        atualizarPreco();
+    const botaoFinalizar = document.getElementById("finalizar-compra");
+    if (botaoFinalizar && !botaoFinalizar.dataset.processando) {
+        botaoFinalizar.disabled = !temItens;
     }
-});
+}
 
 const finalizarCompra = document.getElementById("finalizar-compra");
 const mensagemSucesso = document.getElementById("mensagem-sucesso");
@@ -85,6 +135,7 @@ const endereco = document.getElementById("endereco");
 async function atualizarFrete() {
     const distanciaEntrega = document.getElementById("distancia-entrega");
     const enderecoAtual = endereco.value.trim();
+    freteIndisponivel = false;
 
     if (!enderecoAtual) {
         distanciaEntrega.textContent = "";
@@ -102,8 +153,13 @@ async function atualizarFrete() {
     } catch (erro) {
         console.error("Erro ao calcular frete:", erro);
         distanciaEntrega.textContent =
-            "⚠️ Não foi possível calcular o frete agora (verifique se o servidor está rodando). Tente novamente.";
+            "⚠️ Não conseguimos calcular o frete agora. Você pode continuar: o frete será combinado pelo WhatsApp.";
         enderecoValido = false;
+        freteIndisponivel = true;
+        freteAtual = 0;
+        distanciaKmAtual = null;
+        document.getElementById("frete").textContent = "a combinar";
+        atualizarPreco();
         return;
     }
 
@@ -125,6 +181,7 @@ async function atualizarFrete() {
 
     enderecoValido = true;
     freteAtual = frete;
+    distanciaKmAtual = distanciaKm;
 
     distanciaEntrega.textContent = `Distância da entrega: ${distanciaKm.toFixed(2).replace(".", ",")} km`;
     document.getElementById("frete").textContent = formatarMoeda(frete);
@@ -138,47 +195,26 @@ endereco.addEventListener("change", function () {
 });
 
 const pix = document.getElementById("pix");
-const cartao = document.getElementById("cartao");
+const cartaoEntrega = document.getElementById("cartao-entrega");
+const dinheiro = document.getElementById("dinheiro");
+const troco = document.getElementById("troco");
 
-const numeroCartao = document.getElementById("numero-cartao");
-const nomeCartao = document.getElementById("nome-cartao");
-const validadeCartao = document.getElementById("validade-cartao");
-const cvvCartao = document.getElementById("cvv-cartao");
+const areas = {
+    pix: document.getElementById("area-pix"),
+    cartao: document.getElementById("area-cartao-entrega"),
+    dinheiro: document.getElementById("area-dinheiro"),
+};
 
-const areaPix = document.getElementById("area-pix");
-const areaCartao = document.getElementById("area-cartao");
-
-pix.addEventListener("change", function () {
-    areaPix.hidden = false;
-    areaCartao.hidden = true;
-    limparErro("pagamento");
+[pix, cartaoEntrega, dinheiro].forEach(function (radio) {
+    radio.addEventListener("change", function () {
+        Object.keys(areas).forEach(function (chave) {
+            areas[chave].hidden = chave !== radio.value;
+        });
+        limparErro("pagamento");
+    });
 });
 
-cartao.addEventListener("change", function () {
-    areaCartao.hidden = false;
-    areaPix.hidden = true;
-    limparErro("pagamento");
-});
-
-// Máscaras simples para os campos de cartão
-numeroCartao.addEventListener("input", function () {
-    const digitos = numeroCartao.value.replace(/\D/g, "").slice(0, 16);
-    numeroCartao.value = digitos.replace(/(.{4})/g, "$1 ").trim();
-});
-
-validadeCartao.addEventListener("input", function () {
-    let digitos = validadeCartao.value.replace(/\D/g, "").slice(0, 4);
-    if (digitos.length > 2) {
-        digitos = `${digitos.slice(0, 2)}/${digitos.slice(2)}`;
-    }
-    validadeCartao.value = digitos;
-});
-
-cvvCartao.addEventListener("input", function () {
-    cvvCartao.value = cvvCartao.value.replace(/\D/g, "").slice(0, 3);
-});
-
-atualizarPreco();
+renderizarCarrinho();
 
 // --- Validação ---
 
@@ -200,12 +236,14 @@ function marcarInvalido(id, invalido) {
 document.getElementById("form-checkout").addEventListener("submit", async function (evento) {
     evento.preventDefault();
 
-    ["nome", "email", "endereco", "pagamento", "numero-cartao", "nome-cartao", "validade-cartao", "cvv-cartao"].forEach(
-        limparErro
-    );
-    ["nome", "email", "endereco", "numero-cartao", "nome-cartao", "validade-cartao", "cvv-cartao"].forEach((id) =>
-        marcarInvalido(id, false)
-    );
+    if (totalDeItens() === 0) {
+        carrinhoVazio.hidden = false;
+        carrinhoVazio.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+    }
+
+    ["nome", "email", "endereco", "pagamento", "troco"].forEach(limparErro);
+    ["nome", "email", "endereco", "troco"].forEach((id) => marcarInvalido(id, false));
 
     const valorNome = nome.value.trim();
     const valorEmail = email.value.trim();
@@ -232,37 +270,29 @@ document.getElementById("form-checkout").addEventListener("submit", async functi
     } else if (!enderecoValido) {
         // Garante que o frete foi calculado para o endereço atual antes de finalizar.
         await atualizarFrete();
-        if (!enderecoValido) {
+        if (!enderecoValido && !freteIndisponivel) {
             mostrarErro("endereco", "Informe um endereço válido em Palmeirópolis, TO.");
             marcarInvalido("endereco", true);
             valido = false;
         }
     }
 
-    if (!pix.checked && !cartao.checked) {
+    const formaPagamento = pix.checked ? "pix" : cartaoEntrega.checked ? "cartao" : dinheiro.checked ? "dinheiro" : "";
+    let valorTroco = null;
+
+    if (!formaPagamento) {
         mostrarErro("pagamento", "Escolha uma forma de pagamento.");
         valido = false;
-    } else if (cartao.checked) {
-        const numeroLimpo = numeroCartao.value.replace(/\s/g, "");
-
-        if (!/^\d{16}$/.test(numeroLimpo)) {
-            mostrarErro("numero-cartao", "O número do cartão deve ter 16 dígitos.");
-            marcarInvalido("numero-cartao", true);
+    } else if (formaPagamento === "dinheiro" && troco.value.trim() !== "") {
+        valorTroco = lerValorEmReais(troco.value);
+        const totalPedido = subtotalDoCarrinho() + (enderecoValido ? freteAtual : 0);
+        if (valorTroco === null) {
+            mostrarErro("troco", "Digite um valor válido, ex.: 50,00.");
+            marcarInvalido("troco", true);
             valido = false;
-        }
-        if (nomeCartao.value.trim().length < 3) {
-            mostrarErro("nome-cartao", "Digite o nome impresso no cartão.");
-            marcarInvalido("nome-cartao", true);
-            valido = false;
-        }
-        if (!/^\d{2}\/\d{2}$/.test(validadeCartao.value)) {
-            mostrarErro("validade-cartao", "Use o formato MM/AA.");
-            marcarInvalido("validade-cartao", true);
-            valido = false;
-        }
-        if (!/^\d{3}$/.test(cvvCartao.value)) {
-            mostrarErro("cvv-cartao", "O CVV deve ter 3 dígitos.");
-            marcarInvalido("cvv-cartao", true);
+        } else if (valorTroco < totalPedido) {
+            mostrarErro("troco", "O valor do troco precisa ser maior que o total (" + formatarMoeda(totalPedido) + ").");
+            marcarInvalido("troco", true);
             valido = false;
         }
     }
@@ -273,14 +303,122 @@ document.getElementById("form-checkout").addEventListener("submit", async functi
         return;
     }
 
-    finalizarCompra.disabled = true;
-    finalizarCompra.textContent = "Processando...";
+    abrirConfirmacao({
+        nome: valorNome,
+        email: valorEmail,
+        endereco: valorEndereco,
+        formaPagamento: formaPagamento,
+        troco: valorTroco,
+    });
+});
 
-    // Simula o processamento do pedido antes de mostrar a confirmação.
+// ---------- Pedido por WhatsApp ----------
+
+// "1.250,50" / "50" / "R$ 50,00" -> número (ou null se inválido)
+function lerValorEmReais(texto) {
+    const limpo = texto.replace(/[^\d,.]/g, "").replace(/\./g, "").replace(",", ".");
+    const n = Number(limpo);
+    return limpo !== "" && Number.isFinite(n) && n > 0 ? n : null;
+}
+
+// Tira caracteres que o WhatsApp interpretaria como formatação e limita o tamanho.
+function textoSeguro(texto, limite) {
+    return String(texto).replace(/[*_~`]/g, "").replace(/\s+/g, " ").trim().slice(0, limite);
+}
+
+function gerarCodigoPedido() {
+    return "DRK-" + Date.now().toString(36).slice(-5).toUpperCase();
+}
+
+function descricaoPagamento(dados) {
+    if (dados.formaPagamento === "pix") return "PIX (enviar a chave por aqui)";
+    if (dados.formaPagamento === "cartao") return "Cartão na entrega (maquininha)";
+    return dados.troco
+        ? "Dinheiro, troco para " + formatarMoeda(dados.troco)
+        : "Dinheiro, não precisa de troco";
+}
+
+function montarMensagemPedido(dados, codigo) {
+    const carrinho = lerCarrinho();
+    const subtotal = subtotalDoCarrinho(carrinho);
+    const freteCalculado = enderecoValido && !freteIndisponivel;
+    const linhas = [];
+
+    linhas.push("🥤 *NOVO PEDIDO — DRINKS*");
+    linhas.push("Pedido " + codigo);
+    linhas.push("");
+    linhas.push("*Cliente:* " + textoSeguro(dados.nome, 80));
+    linhas.push("*E-mail:* " + textoSeguro(dados.email, 80));
+    linhas.push("*Endereço:* " + textoSeguro(dados.endereco, 160) + ", Palmeirópolis - TO");
+    if (freteCalculado && distanciaKmAtual !== null) {
+        linhas.push("*Distância:* " + distanciaKmAtual.toFixed(1).replace(".", ",") + " km");
+    }
+    linhas.push("");
+    linhas.push("*Itens:*");
+    Object.keys(carrinho).forEach(function (chave) {
+        const p = PRODUTOS[chave];
+        linhas.push("• " + carrinho[chave] + "x " + p.nome + " — " + formatarMoeda(p.preco * carrinho[chave]));
+    });
+    linhas.push("");
+    linhas.push("Subtotal: " + formatarMoeda(subtotal));
+    linhas.push("Frete: " + (freteCalculado ? (freteAtual === 0 ? "grátis" : formatarMoeda(freteAtual)) : "a combinar"));
+    linhas.push("*Total: " + formatarMoeda(subtotal + (freteCalculado ? freteAtual : 0)) + (freteCalculado ? "" : " + frete") + "*");
+    linhas.push("");
+    linhas.push("*Pagamento:* " + descricaoPagamento(dados));
+
+    return linhas.join("\n");
+}
+
+const botaoWhatsapp = document.getElementById("botao-whatsapp");
+const botaoCopiar = document.getElementById("copiar-pedido");
+const botaoFechar = document.getElementById("fechar-modal");
+const codigoPedidoEl = document.getElementById("codigo-pedido");
+const avisoWhatsapp = document.getElementById("aviso-whatsapp");
+let mensagemAtual = "";
+
+function fecharConfirmacao() {
+    mensagemSucesso.style.display = "none";
+    overlay.style.display = "none";
+}
+
+function abrirConfirmacao(dados) {
+    const codigo = gerarCodigoPedido();
+    mensagemAtual = montarMensagemPedido(dados, codigo);
+
+    codigoPedidoEl.textContent = codigo;
+    botaoWhatsapp.href = linkWhatsApp(mensagemAtual);
+    botaoWhatsapp.textContent = "Enviar pedido pelo WhatsApp";
+    botaoCopiar.textContent = "Copiar texto do pedido";
+    avisoWhatsapp.hidden = WHATSAPP_NUMERO !== "5500000000000";
+
+    mensagemSucesso.style.display = "block";
+    overlay.style.display = "block";
+    botaoWhatsapp.focus();
+}
+
+// Ao enviar pelo WhatsApp, o pedido está feito: esvazia o carrinho (ou a compra direta).
+botaoWhatsapp.addEventListener("click", function () {
     setTimeout(function () {
-        mensagemSucesso.style.display = "block";
-        overlay.style.display = "block";
-        finalizarCompra.disabled = false;
-        finalizarCompra.textContent = "Finalizar compra";
-    }, 600);
+        salvarCarrinho({});
+        botaoWhatsapp.textContent = "Pedido enviado ✓ (confirme no WhatsApp)";
+    }, 300);
+});
+
+botaoCopiar.addEventListener("click", function () {
+    function marcarCopiado() {
+        botaoCopiar.textContent = "Copiado ✓";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(mensagemAtual).then(marcarCopiado, function () {
+            window.prompt("Copie o texto do pedido:", mensagemAtual);
+        });
+    } else {
+        window.prompt("Copie o texto do pedido:", mensagemAtual);
+    }
+});
+
+botaoFechar.addEventListener("click", fecharConfirmacao);
+overlay.addEventListener("click", fecharConfirmacao);
+document.addEventListener("keydown", function (evento) {
+    if (evento.key === "Escape") fecharConfirmacao();
 });

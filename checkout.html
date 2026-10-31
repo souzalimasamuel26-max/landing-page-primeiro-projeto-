@@ -19,22 +19,19 @@
     <main>
         <form id="form-checkout" novalidate>
             <section class="produto">
-                <h2>Seu produto</h2>
+                <h2 id="titulo-itens">Seu carrinho</h2>
 
-                <div class="produto-info">
-                    <img id="imagem-produto" src="./assets/fanta.png" alt="" />
+                <p id="aviso-compra-direta" class="aviso-direta" hidden>
+                    Compra direta: só este item entra no pedido. Seu carrinho continua guardado.
+                    <a href="./checkout.html">Ver carrinho completo</a>
+                </p>
 
-                    <div>
-                        <h3 id="nome-produto">Fanta Laranja</h3>
-                        <p id="descricao">Refrigerante sabor laranja</p>
-                        <span id="preco-produto">R$ 8,00</span>
-                        <div class="quantidade">
-                            <button type="button" id="diminuir" aria-label="Diminuir quantidade">−</button>
-                            <span id="quantidade" aria-live="polite">1</span>
-                            <button type="button" id="aumentar" aria-label="Aumentar quantidade">+</button>
-                        </div>
-                    </div>
-                </div>
+                <div id="itens-carrinho"></div>
+
+                <p id="carrinho-vazio" hidden>
+                    Seu carrinho está vazio.
+                    <a href="./index.html#produtos">Escolher refrigerantes</a>
+                </p>
             </section>
 
             <section class="dados">
@@ -57,46 +54,41 @@
 
             <section class="pagamento">
                 <h2>Forma de pagamento</h2>
+                <p class="pagamento-nota">O pagamento é combinado direto com a gente, na entrega ou pelo WhatsApp.</p>
 
                 <label>
-                    <input type="radio" name="pagamento" id="pix" />
+                    <input type="radio" name="pagamento" id="pix" value="pix" />
                     PIX
                 </label>
 
                 <label>
-                    <input type="radio" name="pagamento" id="cartao" />
-                    Cartão
+                    <input type="radio" name="pagamento" id="cartao-entrega" value="cartao" />
+                    Cartão na entrega (maquininha)
+                </label>
+
+                <label>
+                    <input type="radio" name="pagamento" id="dinheiro" value="dinheiro" />
+                    Dinheiro
                 </label>
                 <span class="erro" id="erro-pagamento"></span>
 
                 <div id="area-pix" hidden>
-                    <p>Pagamento via PIX</p>
-                    <p>O código PIX será exibido após a confirmação do pedido.</p>
+                    <p>Vamos te enviar a chave PIX pelo WhatsApp assim que o pedido chegar.</p>
                 </div>
 
-                <div id="area-cartao" hidden>
-                    <p>Pagamento via cartão</p>
+                <div id="area-cartao-entrega" hidden>
+                    <p>Levamos a maquininha: débito ou crédito.</p>
+                </div>
 
-                    <label for="numero-cartao">Número do cartão</label>
-                    <input type="text" id="numero-cartao" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" />
-                    <span class="erro" id="erro-numero-cartao"></span>
-
-                    <label for="nome-cartao">Nome no cartão</label>
-                    <input type="text" id="nome-cartao" placeholder="Como está impresso no cartão" autocomplete="cc-name" />
-                    <span class="erro" id="erro-nome-cartao"></span>
-
-                    <label for="validade-cartao">Validade</label>
-                    <input type="text" id="validade-cartao" inputmode="numeric" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" />
-                    <span class="erro" id="erro-validade-cartao"></span>
-
-                    <label for="cvv-cartao">CVV</label>
-                    <input type="text" id="cvv-cartao" inputmode="numeric" placeholder="CVV" maxlength="3" autocomplete="cc-csc" />
-                    <span class="erro" id="erro-cvv-cartao"></span>
+                <div id="area-dinheiro" hidden>
+                    <label for="troco">Precisa de troco? Para quanto? (opcional)</label>
+                    <input type="text" id="troco" inputmode="decimal" placeholder="Ex.: 50,00" maxlength="12" />
+                    <span class="erro" id="erro-troco"></span>
                 </div>
             </section>
 
             <section class="resumo">
-                <p>Produto: <span id="resumo-produto">Fanta Laranja</span></p>
+                <p>Itens: <span id="resumo-itens">0</span></p>
                 <p>Subtotal: <span id="subtotal">R$ 8,00</span></p>
                 <p>Frete: <span id="frete">R$ 0,00</span></p>
                 <h3>Total: <span id="total">R$ 8,00</span></h3>
@@ -109,11 +101,23 @@
     <div id="overlay"></div>
 
     <div id="mensagem-sucesso" role="dialog" aria-modal="true" aria-labelledby="titulo-sucesso">
-        <h2 id="titulo-sucesso">🎉 Compra realizada com sucesso!</h2>
-        <p>Obrigado pela sua compra!</p>
-        <a href="./index.html">Voltar para a loja</a>
+        <h2 id="titulo-sucesso">🥤 Seu pedido está pronto!</h2>
+        <p class="modal-codigo">Pedido <strong id="codigo-pedido"></strong></p>
+        <p>Falta só um passo: envie o pedido para a gente pelo WhatsApp. Ele só é confirmado depois que a mensagem for enviada.</p>
+
+        <a id="botao-whatsapp" class="btn-whatsapp" href="#" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>
+        <button type="button" id="copiar-pedido" class="btn-secundario">Copiar texto do pedido</button>
+        <p id="aviso-whatsapp" class="aviso-whatsapp" hidden>
+            ⚠️ O número de WhatsApp da loja ainda não foi configurado (arquivo carrinho.js).
+        </p>
+
+        <div class="modal-links">
+            <button type="button" id="fechar-modal" class="link-simples">Voltar e revisar o pedido</button>
+            <a href="./index.html" class="link-simples">Voltar para a loja</a>
+        </div>
     </div>
 
+    <script src="./carrinho.js"></script>
     <script src="./checkout.js"></script>
 </body>
 </html>

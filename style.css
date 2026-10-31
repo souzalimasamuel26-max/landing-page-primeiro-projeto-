@@ -82,6 +82,13 @@ a {
     padding: 0 50px;
     z-index: 999;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent);
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-container.rolou {
+    background: rgba(44, 19, 14, 0.92);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .nav-container a.logo {
@@ -94,6 +101,8 @@ a {
 .nav-menu {
     display: flex;
     gap: 50px;
+    margin-left: auto;
+    margin-right: 30px;
 }
 
 .nav-menu a {
@@ -127,6 +136,48 @@ a {
     filter: brightness(0) invert(1);
 }
 
+/* Carrinho no menu */
+.carrinho-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.18);
+    transition: background-color var(--transicao);
+}
+
+.carrinho-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.carrinho-contagem {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 50px;
+    background: white;
+    color: var(--laranja-escuro);
+    font-size: 0.85rem;
+    line-height: 22px;
+    text-align: center;
+}
+
+.carrinho-contagem.vazio {
+    opacity: 0.6;
+}
+
+.carrinho-contagem.pulo {
+    animation: pulo 0.35s ease;
+}
+
+@keyframes pulo {
+    50% { transform: scale(1.4); }
+}
+
 /* Seção Hero */
 .Hero {
     position: relative;
@@ -145,17 +196,21 @@ a {
 }
 
 #fanta {
+    pointer-events: none; /* senão a Fanta "rouba" o mouse do card e o hover pisca */
     position: absolute;
     width: 35%;
     z-index: 2;
     transition: transform var(--transicao);
 }
 
-#fanta.fanta-hover {
-    transform: scale(1.08);
+#fanta.fanta-hover,
+#laranja-cortada.fanta-hover {
+    transform: scale(1.05);
 }
 
 #laranja-cortada {
+    pointer-events: none;
+    transition: transform var(--transicao);
     position: absolute;
     width: 15%;
     top: 10%;
@@ -256,15 +311,17 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* centraliza título + cards na altura da tela */
     min-height: 100vh;
-    padding: 10vh 5vw;
+    min-height: 100dvh;
+    padding: 4vh 5vw;
     background: linear-gradient(150deg, var(--laranja), var(--vermelho));
 }
 
 .section-title {
     color: white;
     font-size: clamp(1.8rem, 3vw, 2.5rem);
-    margin-bottom: 6vh;
+    margin-bottom: 3vh;
     text-align: center;
 }
 
@@ -285,7 +342,7 @@ a {
     align-items: center;
     flex-direction: column;
     gap: 0.5vh;
-    height: 540px;
+    height: 640px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--sombra-card);
@@ -293,7 +350,7 @@ a {
 }
 
 .card:hover {
-    transform: translateY(-6px);
+    transform: scale(1.05);
 }
 
 .card h3 {
@@ -316,6 +373,7 @@ a {
 }
 
 .btn-comprar {
+    font-family: inherit;
     position: relative;
     z-index: 2;
     display: inline-block;
@@ -323,19 +381,54 @@ a {
     margin-top: 1.5vh;
     padding: 0.8rem 1.6rem;
     border-radius: 50px;
-    border: none;
-    background-color: var(--laranja);
-    color: white;
+    border: 2px solid var(--laranja);
+    background-color: white;
+    color: #b35f00;
     font-size: 1rem;
     font-weight: 700;
     text-decoration: none;
     text-align: center;
     cursor: pointer;
-    transition: transform var(--transicao), background-color var(--transicao);
+    transition: transform var(--transicao), background-color var(--transicao), color var(--transicao);
+}
+
+.card-botoes {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 1.5vh 10px 2vh;
+}
+
+.card-botoes .btn-comprar {
+    margin: 0;
+    padding: 0.75rem 1.3rem;
+}
+
+.btn-carrinho {
+    font-family: inherit;
+    padding: 0.75rem 1.3rem;
+    border-radius: 50px;
+    border: 2px solid var(--laranja);
+    background: var(--laranja);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--transicao), background-color var(--transicao), color var(--transicao);
+}
+
+.btn-carrinho:hover {
+    background: white;
+    color: #b35f00;
+    transform: scale(1.05);
 }
 
 .btn-comprar:hover {
-    background-color: #e68200;
+    background-color: var(--laranja);
+    color: white;
     transform: scale(1.05);
 }
 
@@ -346,7 +439,7 @@ a {
     position: absolute;
     top: 6%;
     left: 50%;
-    width: 100%;
+    width: 130%;
     z-index: 3;
     object-fit: contain;
     transform: translate(-50%, 0%);
@@ -354,23 +447,24 @@ a {
 }
 
 #cocacola {
-    height: 76%;
+    /* Alturas calculadas pra a lata visível ter o mesmo tamanho da Fanta
+       (cada PNG tem uma margem transparente diferente). */
+    height: 64%;
+    top: 15.2%;
 }
 
 #pepsi {
-    height: 71%;
-}
-
-.card:hover #cocacola,
-.card:hover #pepsi {
-    transform: translate(-50%, 0%) scale(1.08);
+    height: 64.8%;
+    top: 15.5%;
 }
 
 .lemon {
+    /* Imagem com margem transparente: com 340px o círculo visível tem ~240px.
+       Fica atrás da lata, com quase metade aparecendo por cima dela. */
     position: absolute;
-    top: -12%;
+    top: -3%;
     left: 50%;
-    width: 175px;
+    width: 340px;
     z-index: 2;
     transform: translate(-50%, 0%);
 }
@@ -459,6 +553,10 @@ a {
 
 /* Responsivo */
 @media (max-width: 900px) {
+    #fanta {
+        width: min(80vw, 320px);
+    }
+
     .two {
         flex-direction: column;
         height: auto;
@@ -486,6 +584,7 @@ a {
     }
 
     .nav-menu {
+        margin: 0;
         display: none;
         position: absolute;
         top: 70px;
@@ -508,6 +607,11 @@ a {
 
     .menu-icon {
         display: flex;
+        margin-left: 12px;
+    }
+
+    .carrinho-link {
+        margin-left: auto;
     }
 
     .footer-inner {

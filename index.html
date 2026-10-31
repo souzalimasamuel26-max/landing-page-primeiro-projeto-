@@ -21,6 +21,11 @@
                 <a href="#contato">Contato</a>
             </div>
 
+            <a href="checkout.html" class="carrinho-link" id="carrinho-link" aria-label="Ver carrinho">
+                <span aria-hidden="true">🛒</span>
+                <span class="carrinho-contagem" id="carrinho-contagem">0</span>
+            </a>
+
             <button class="menu-icon" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu">
                 <img src="./assets/menu.png" alt="" />
             </button>
@@ -64,13 +69,19 @@
                     <img id="cocacola" src="./assets/cocacola.png" alt="Lata de Coca-Cola" />
                     <h3>Coca-Cola</h3>
                     <span class="preco">R$ 10,00</span>
-                    <a class="btn-comprar" href="checkout.html?produto=coca">Comprar agora</a>
+                    <div class="card-botoes">
+                        <a class="btn-comprar" href="checkout.html?comprar=coca">Comprar agora</a>
+                        <button class="btn-carrinho" type="button" data-produto="coca">+ Carrinho</button>
+                    </div>
                 </div>
 
                 <div class="card" id="card-fanta">
                     <h3>Fanta Laranja</h3>
                     <span class="preco">R$ 8,00</span>
-                    <a class="btn-comprar" href="checkout.html?produto=fanta">Comprar agora</a>
+                    <div class="card-botoes">
+                        <a class="btn-comprar" href="checkout.html?comprar=fanta">Comprar agora</a>
+                        <button class="btn-carrinho" type="button" data-produto="fanta">+ Carrinho</button>
+                    </div>
                 </div>
 
                 <div class="card">
@@ -78,7 +89,10 @@
                     <img id="pepsi" src="./assets/pepsi.png" alt="Lata de Pepsi" />
                     <h3>Pepsi</h3>
                     <span class="preco">R$ 9,00</span>
-                    <a class="btn-comprar" href="checkout.html?produto=pepsi">Comprar agora</a>
+                    <div class="card-botoes">
+                        <a class="btn-comprar" href="checkout.html?comprar=pepsi">Comprar agora</a>
+                        <button class="btn-carrinho" type="button" data-produto="pepsi">+ Carrinho</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,7 +106,7 @@
                 <div class="footer-contato">
                     <h4>Contato</h4>
                     <p>Seg. a sáb. · 9h às 21h</p>
-                    <a href="https://wa.me/5500000000000" target="_blank" rel="noopener">WhatsApp</a>
+                    <a href="https://wa.me/5500000000000" id="link-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
                 </div>
             </div>
             <p class="footer-copy">© <span id="ano"></span> Drinks. Todos os direitos reservados.</p>
@@ -101,6 +115,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="./carrinho.js"></script>
     <script src="./script.js"></script>
 </body>
 </html>
